@@ -1,0 +1,44 @@
+{
+    "name": "revisor/trend",
+    "description": "A user-friendly framework for running background jobs in any language.",
+    "keywords": [
+        "trend",
+        "correlation",
+        "significance",
+        "regression"
+    ],
+    "homepage": "https://github.com/Revisor/trend",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Martin Schlemmer",
+            "email": "lenz@centrum.cz"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "mcordingley/Regression": "^0.9"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "^5.0",
+        "scrutinizer/ocular": "^1.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Revisor\\Trend\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Revisor\\Trend\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    }
+}

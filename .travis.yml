@@ -1,0 +1,38 @@
+language: php
+
+php:
+#  - 5.5 # Dev dependencies require 5.6
+  - 5.6
+  - 7.0
+  - 7.1
+
+## Run on container environment
+sudo: false
+
+## Cache composer bits
+cache:
+  directories:
+    - $HOME/.composer/cache
+
+# Commands to be run before your environment runs.
+before_script:
+  - travis_retry composer self-update
+  - travis_retry composer install --prefer-source --no-interaction
+
+# Commands you want to run that will verify your build.
+script:
+    - vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
+
+after_script:
+  - php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
+
+# allow_failures: Allow this build to fail under the specified environments.
+# fast_finish: If your build fails do not continue trying to build, just stop.
+matrix:
+  allow_failures:
+    - php: hhvm
+
+# Customize when the notification emails are sent.
+notifications:
+    on_success: never
+    on_failure: never
