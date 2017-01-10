@@ -117,6 +117,7 @@ class CorrelationSignificance
         // Find the table row that is next smaller than
         //  or equal to the data point count
         krsort($this->correlationSignificance['.025']);
+        $requiredCorrelation = 1;
         foreach ($this->correlationSignificance['.025'] as $caseCount => $requiredCorrelation) {
             if ($caseCount <= $dataPointCount) {
                 break;

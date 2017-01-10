@@ -31,20 +31,23 @@ class TrendCalculator
      */
     private $regression;
     
-    public function __construct(CorrelationSignificance $correlationSignificance)
+    public function __construct(CorrelationSignificance $correlationSignificance = null)
     {
+        if (is_null($correlationSignificance)) {
+            $correlationSignificance = new CorrelationSignificance();
+        }
         $this->correlationSignificance = $correlationSignificance;
     }
     
     /**
      * Calculate trend from the given data points
      *
-     * It accepts multiple values for the one timestamp
+     * It accepts multiple values for one timestamp
      *
      * @param array $data Keys are time in any units (in seconds, milliseconds, days, week),
      *                    values are data values.
      *                    Each point is specified in the separate array,
-     *                    so we can define multiple values for the one timestamp:
+     *                    so we can define multiple values for one timestamp:
      *                    [
      *                    [timestamp1 => value1]
      *                    [timestamp1 => value2]

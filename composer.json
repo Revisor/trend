@@ -1,6 +1,6 @@
 {
     "name": "revisor/trend",
-    "description": "A user-friendly framework for running background jobs in any language.",
+    "description": "Analyze data and try to find a significant trend",
     "keywords": [
         "trend",
         "correlation",
