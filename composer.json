@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "mcordingley/Regression": "^0.9"
+        "mcordingley/Regression": "^1.1"
     },
     "require-dev": {
         "phpunit/phpunit" : "^5.0",
