@@ -2,6 +2,7 @@
 namespace Revisor\Trend\Test;
 
 use mcordingley\Regression\SimpleRegression;
+use mcordingley\Regression\StatisticsGatherer\Linear;
 use Revisor\Trend\CorrelationSignificance;
 use Revisor\Trend\TrendCalculator;
 
@@ -134,9 +135,23 @@ class TrendCalculatorTest extends \PHPUnit_Framework_TestCase
     public function testAccessToRegression()
     {
         $this->assertInstanceOf(
-            SimpleRegression::class,
+            Linear::class,
             $this->tc->getRegression()
         );
+    }
+    
+    public function testCurrentTimestamp()
+    {
+        $startTimestamp = 1486068198;
+        $data = array();
+        $j = 0;
+        for ($i = 0; $i < 100; $i += 10) {
+            $j += 10;
+            $key = $startTimestamp + $i;
+            $data[] = [$key => $j];
+        }
+        
+        $this->assertEquals(1, $this->tc->calculateTrend($data));
     }
     
     /**

@@ -1,8 +1,11 @@
 <?php
 namespace Revisor\Trend;
 
-use mcordingley\Regression\SimpleRegression;
+use mcordingley\Regression\Algorithm\LeastSquares;
+use mcordingley\Regression\Observations;
 use Exception;
+use mcordingley\Regression\StatisticsGatherer\Linear as LinearGatherer;
+use mcordingley\Regression\Predictor\Linear as LinearPredictor;
 
 /**
  * A calculator that analyzes data and tries to find a significant trend
@@ -27,7 +30,7 @@ class TrendCalculator
     private $correlationSignificance;
     
     /**
-     * @var SimpleRegression
+     * @var LinearGatherer
      */
     private $regression;
     
@@ -65,20 +68,30 @@ class TrendCalculator
             return 0;
         }
         
-        $this->createRegression();
+        $observations = new Observations();
         
         foreach ($data as $point) {
-            $this->regression->addData(current($point), [key($point)]);
+            $time = key($point);
+            $outcome = current($point);
+            $observations->add([1.0, $time], $outcome);
         }
+    
+        $algorithm = new LeastSquares();
         
         try {
+            $coefficients = $algorithm->regress($observations);
+    
+            $predictor = new LinearPredictor($coefficients);
+            $this->regression = new LinearGatherer($observations, $coefficients, $predictor);
+    
             if ( ! $this->isCorrelationSignificant($dataCount)) {
                 return 0;
             }
             
-            $slope = $this->regression->getCoefficients()[0];
+            $slope = $coefficients[1];
             return $slope;
         } catch (Exception $e) {
+            throw $e;
             return 0;
         }
     }
@@ -88,14 +101,10 @@ class TrendCalculator
      *
      * You can eg. ask the regression to predict() a future value
      *
-     * @return SimpleRegression
+     * @return LinearGatherer
      */
     public function getRegression()
     {
-        if ($this->regression === null) {
-            $this->createRegression();
-        }
-        
         return $this->regression;
     }
     
@@ -112,7 +121,8 @@ class TrendCalculator
     private function isCorrelationSignificant($dataPointCount)
     {
         // R-Squared is the square of r, the correlation coefficient
-        $rSquared = $this->regression->getRSquared();
+        $rSquared = abs($this->regression->getRSquared());
+        
         // Note: This is not really a correlation, we have lost the +/- sign
         // However we don't need the sign for determining the significance
         $correlation = sqrt($rSquared);
@@ -123,13 +133,5 @@ class TrendCalculator
             $dataPointCount
         );
         return $isSignificant;
-    }
-    
-    /**
-     * A factory method for creating the regression object
-     */
-    private function createRegression()
-    {
-        $this->regression = new SimpleRegression();
     }
 }
